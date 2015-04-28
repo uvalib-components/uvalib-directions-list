@@ -1,4 +1,5 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../uvalib-directions/uvalib-directions.html">
 
 <!--
 Element providing solution to no problem in particular.
@@ -12,68 +13,35 @@ Element providing solution to no problem in particular.
 @status alpha
 @homepage http://uvalib-components.github.io/uvalib-directions-list
 -->
-<polymer-element name="uvalib-directions-list" attributes="author fancy">
+<polymer-element name="uvalib-directions-list" attributes="steps selectedStep item library">
   <template>
     <link rel="stylesheet" href="uvalib-directions-list.css">
-    <h1>Hello from uvalib-directions-list</h1>
-    <content></content>
+    <uvalib-directions auto steps="{{steps}}" item="{{item}}" library="{{library}}"></uvalib-directions>
+
+    <template if="{{item.available}}">
+	    <div id="result" style="background-image: url({{item.cover_image_url}});">
+      	<div id="title">{{item.title}}</div>
+      	<dl class="metadata">
+      		<template if="{{item.author}}">
+          		<dt>Author</dt><dd class="authorField">{{item.author}}</dd>
+        	</template>
+      	</dl>
+    	</div>
+    	<core-selector target="{{$.steps}}" selected="{{selectedStep}}"></core-selector>
+    	<ol id="steps">
+    	<template repeat="{{step in steps}}">
+      		<li class="step"><template is="juicy-html" bind="" content="{{step.direct}}"></template></li>
+    	</template>
+    	</ol>
+    </template>
+    <template if="{{!item.available}}">
+    	<h2>This item is not available</h2>
+    </template>
+
   </template>
   <script>
     Polymer({
-      /**
-       * The `author` attribute sets an initial author
-       *
-       * @attribute author
-       * @type string
-       * @default 'Dimitri Glazkov'
-       */
-      author: 'Dimitri Glazkov',
-
-      /**
-       * `fancy` is a property that does something fancy.
-       *
-       * @property fancy
-       * @type bool
-       * @default false
-       */
-      fancy: false,
-
-      ready: function () {
-        // Ready is a lifecycle callback.
-        // You can do setup work in here.
-        // More info: http://www.polymer-project.org/docs/polymer/polymer.html#lifecyclemethods
-      },
-
-      /**
-       * The `sayHello` method will return a greeting.
-       *
-       * @method sayHello
-       * @param {String} greeting Pass in a specific greeting.
-       * @return {String} Returns a string greeting.
-       */
-      sayHello: function (greeting) {
-        var response = greeting || 'Hello World!';
-        return 'uvalib-directions-list says, ' + response;
-      },
-
-      /**
-       * The `uvalib-directions-list-lasers-success` event is fired whenever we
-       * call fireLasers.
-       *
-       * @event uvalib-directions-list-lasers-success
-       * @param {Object} detail
-       *   @param {string} detail.sound An amazing sound.
-       */
-
-      /**
-       * The `fireLasers` method will fire the lasers. At least
-       * it will dispatch an event that claims lasers were fired :)
-       *
-       * @method fireLasers
-       */
-      fireLasers: function () {
-        this.fire('uvalib-directions-list-lasers-success', { sound: 'Pew pew pew!' });
-      }
+      
     });
   </script>
 </polymer-element>
