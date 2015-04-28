@@ -34,7 +34,7 @@ Element providing solution to no problem in particular.
     	</template>
     	</ol>
     </template>
-    <template if="{{!item.available}}">
+    <template if="{{item && !item.available}}">
     	<h2>This item is not available</h2>
     </template>
 
