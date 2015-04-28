@@ -1,5 +1,7 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../core-selector/core-selector.html">
 <link rel="import" href="../uvalib-directions/uvalib-directions.html">
+<link rel="import" href="../juicy-html/juicy-html.html">
 
 <!--
 Element providing solution to no problem in particular.
@@ -18,30 +20,43 @@ Element providing solution to no problem in particular.
     <link rel="stylesheet" href="uvalib-directions-list.css">
     <uvalib-directions auto steps="{{steps}}" item="{{item}}" library="{{library}}"></uvalib-directions>
 
-    <template if="{{item.available}}">
+    <core-toolbar>
+              <paper-icon-button raised on-tap="{{goback}}" icon="arrow-back" title="arrow-back" role="button" tabindex="0" aria-label="arrow-back"></paper-icon-button>
+              <div id="title">{{item.title}}</div>
+    </core-toolbar>
+	<div style="{{item.available?'':'display:none'}}">
 	    <div id="result" style="background-image: url({{item.cover_image_url}});">
-      	<div id="title">{{item.title}}</div>
       	<dl class="metadata">
       		<template if="{{item.author}}">
           		<dt>Author</dt><dd class="authorField">{{item.author}}</dd>
         	</template>
       	</dl>
     	</div>
-    	<core-selector target="{{$.steps}}" selected="{{selectedStep}}"></core-selector>
+    	<core-selector target="{{$.steps}}" selected="{{selectedStep}}">
     	<ol id="steps">
     	<template repeat="{{step in steps}}">
-      		<li class="step"><template is="juicy-html" bind="" content="{{step.direct}}"></template></li>
+      		<li class="step"><template is="juicy-html" bind="" content="{{step.direction}}"></template></li>
     	</template>
     	</ol>
-    </template>
-    <template if="{{item && !item.available}}">
+    	</core-selector>
+    </div>
+    <div id="slow" style="{{(item && item.available)?'opacity:0':''}}">
     	<h2>This item is not available</h2>
-    </template>
+    </div>
 
   </template>
   <script>
     Polymer({
-      
+      selectedStep: null,
+      stepsChanged: function(){
+        if (this.steps && this.steps.length > 0) this.selectedStep = 0;
+      },
+      goback: function(){
+        this.item = null;
+      },
+      selectedStepChanged: function(){ 
+//      	alert('changed!'+this.selectedStep); 
+      }
     });
   </script>
 </polymer-element>
